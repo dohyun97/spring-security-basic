@@ -27,6 +27,9 @@ public class SecurityConfig {
                 .loginPage("/loginForm")  //권한 없는 페이지에 접근 했을때 이 주소로 가도록 redirect
                 .loginProcessingUrl("/login")
                 .defaultSuccessUrl("/")
+                .and()
+                .oauth2Login()
+                .loginPage("/loginForm")
                 .and().build(); //끝에 꼭 이거 추가
     }
     //패스워드 암호화 하기

@@ -4,6 +4,8 @@ import com.cos.security1.domain.User;
 import com.cos.security1.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -18,17 +20,17 @@ public class IndexController {
     public String index(){
         return "index";
     }
-
+    @ResponseBody
     @GetMapping("/user")
     public String user(){
         return "user";
     }
-
+    @ResponseBody
     @GetMapping("/admin")
     public String admin(){
         return "admin";
     }
-
+   @ResponseBody
     @GetMapping("/manager")
     public String manager(){
         return "manager";
@@ -46,8 +48,21 @@ public class IndexController {
 
     @PostMapping("/join")
     public String join(@ModelAttribute User user){
-        System.out.println(user);
         userService.save(user);
         return "redirect:/loginForm";
+    }
+
+    @ResponseBody
+    @Secured("ROLE_ADMIN")
+    @GetMapping("/info")
+    public String info(){
+        return "Private Info";
+    }
+
+    @ResponseBody
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER')")
+    @GetMapping("/data")
+    public String data(){
+        return "Data";
     }
 }

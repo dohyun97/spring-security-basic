@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -15,6 +17,7 @@ public class UserService {
 
     public void save(User user){
         user.setRole(Role.ROLE_USER);
+        user.setCreateDate(LocalDateTime.now());
         String rawPw = user.getPassword();
         String encPw = bCryptPasswordEncoder.encode(rawPw);
         user.setPassword(encPw);

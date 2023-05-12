@@ -2,6 +2,7 @@ package com.cos.security1.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -10,6 +11,7 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity //시큐리티 활성화 하기 위해
+@EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true)
 public class SecurityConfig {
 
     @Bean
@@ -23,6 +25,8 @@ public class SecurityConfig {
                 .and()
                 .formLogin()
                 .loginPage("/loginForm")  //권한 없는 페이지에 접근 했을때 이 주소로 가도록 redirect
+                .loginProcessingUrl("/login")
+                .defaultSuccessUrl("/")
                 .and().build(); //끝에 꼭 이거 추가
     }
     //패스워드 암호화 하기

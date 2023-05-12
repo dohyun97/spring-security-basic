@@ -1,11 +1,19 @@
 package com.cos.security1.controller;
 
+import com.cos.security1.domain.User;
+import com.cos.security1.service.UserService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-
+@Slf4j
 @Controller
+@RequiredArgsConstructor
 public class IndexController {
+    private final UserService userService;
     @GetMapping({"","/"})
     public String index(){
         return "index";
@@ -26,18 +34,20 @@ public class IndexController {
         return "manager";
     }
     //security config 파일 작성 후 스프링 시큐리티가 정해 놓은 로그인 페이지로 안가고 내가 설정한 페이지로 가
-    @GetMapping("/login")
-    public String login(){
-        return "login";
+    @GetMapping("/loginForm")
+    public String loginForm(){
+        return "loginForm";
     }
 
-    @GetMapping("/join")
-    public String join(){
-        return "join";
+    @GetMapping("/joinForm")
+    public String joinForm(){
+        return "joinForm";
     }
-    @ResponseBody
-    @GetMapping("/joinProc")
-    public String joinProc(){
-        return "Successfully Signed up!";
+
+    @PostMapping("/join")
+    public String join(@ModelAttribute User user){
+        System.out.println(user);
+        userService.save(user);
+        return "redirect:/loginForm";
     }
 }

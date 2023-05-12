@@ -4,6 +4,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 
@@ -21,7 +22,12 @@ public class SecurityConfig {
                 .anyRequest().permitAll() //위 URL이 아닌 주소는 아무나 접근 가능
                 .and()
                 .formLogin()
-                .loginPage("/login")  //권한 없는 페이지에 접근 했을때 이 주소로 가도록 redirect
+                .loginPage("/loginForm")  //권한 없는 페이지에 접근 했을때 이 주소로 가도록 redirect
                 .and().build(); //끝에 꼭 이거 추가
+    }
+    //패스워드 암호화 하기
+    @Bean
+    public BCryptPasswordEncoder encodePassword(){
+        return new BCryptPasswordEncoder();
     }
 }

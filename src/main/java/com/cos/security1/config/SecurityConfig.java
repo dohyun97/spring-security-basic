@@ -1,5 +1,7 @@
 package com.cos.security1.config;
 
+import com.cos.security1.oauth.PrincipalOauth2UserService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -12,7 +14,9 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 @EnableWebSecurity //시큐리티 활성화 하기 위해
 @EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true)
+@RequiredArgsConstructor
 public class SecurityConfig {
+    private final PrincipalOauth2UserService principalOauth2UserService;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -28,13 +32,13 @@ public class SecurityConfig {
                 .loginProcessingUrl("/login")
                 .defaultSuccessUrl("/")
                 .and()
-                .oauth2Login()
+                .oauth2Login() //oauth2 login
                 .loginPage("/loginForm")
+                .userInfoEndpoint()
+                .userService(principalOauth2UserService) //구글 로그인 완료된 뒤의 후처리가 필요. 이렇게 하면 로그인 후 코드(인증)를 받는게 아니라 토큰(권한)&사용자 프로필을 받아
+                .and()
                 .and().build(); //끝에 꼭 이거 추가
     }
-    //패스워드 암호화 하기
-    @Bean
-    public BCryptPasswordEncoder encodePassword(){
-        return new BCryptPasswordEncoder();
-    }
+    //여기에 Bcrypt 빈을 생성했더니 순환참조 문제 발생. principalOauth2UserService는 securityConfig에 있는 Bcrypt 를 주입 받고
+    // securityConfig는 principalOauth2UserService에 있는 PrincipalOauth2UserService를 주입 받아서
 }

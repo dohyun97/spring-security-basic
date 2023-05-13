@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 public class PrincipalDetailsService implements UserDetailsService {
     private final UserRepository userRepository;
 
+    //이때 @AunthenticationPrincipal 어노테이션이 생성 돼
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         log.info("loadUserByUsername = {}",username);

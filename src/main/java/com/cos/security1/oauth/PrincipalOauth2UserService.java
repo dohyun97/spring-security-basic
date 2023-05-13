@@ -21,6 +21,7 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
     private final UserRepository userRepository;
 
     //구글로 받은 userRequest로 부터 후처리 되는 함수
+    // 함수 종료시 @AunthenticationPrincipal 어노테이션이 생성 돼
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
         log.info("getClientRegistration = {}",userRequest.getClientRegistration()); //여기서 registrationId 로 어떤 Oauth로 로그인 했는지 확은 가능(ex.google)
@@ -35,7 +36,7 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
         String password = bCryptPasswordEncoder.encode("getinthere");
         String email = oAuth2User.getAttribute("email");
         Role role = Role.ROLE_USER;
-        //이미 가입한 회원이면 가입 시키지마. 가입 안한 회원만 회원가입. google login시도 할 때 회원이 아니면 강제로 회원가입 시켜서 로그인 시켜줘
+        //이미 가입한 회원이면 가입 시키지마. 가입 안한 회원만 회원가입. google login시도 할 때 회원이 아니면 강제로 회원가입 시켜서 로그인 시켜
         User findUser = userRepository.findByUsername(username);
         if (findUser == null){
             log.info("This is first time for Google Login");
